@@ -1,4 +1,4 @@
-# SJTU Canvas Skill：课程视频字幕与复习材料生成助手
+# SJTU Canvas Skill
 
 这个 skill 面向上海交通大学 Canvas 平台用户，帮助你把 **课程文件（PPT/PDF）** 和 **课堂视频字幕** 自动整理成本地复习材料。它适合用于期末复习、补课、快速回顾某一讲内容，尤其适合不想完整回看视频、但希望知道“老师在视频哪一段讲了 PPT 上哪个知识点”的场景。
 
@@ -6,12 +6,20 @@
 
 ---
 
-## 1. skill 提供的 cli 功能
+## 0. 安装使用
+
+当你已经拥有了一个 Agent (OpenClaw、Hermes、Codex 等)，你只需要发给它下面这段话即可：
+
+```
+安装 https://github.com/leinfinitr/sjtu-canvas-skill.git 这个 skill，并使用它来帮助我复习上海交通大学 Canvas 上的课程。
+```
+
+## 1. skill 提供的 cli 功能（Optional）
 
 ### 1.0 准备环境
 
 ```bash
-git clone
+git clone https://github.com/leinfinitr/sjtu-canvas-skill.git
 cd sjtu-canvas-skill
 uv sync
 ```
@@ -82,7 +90,7 @@ reviews/算法设计与分析/第28讲/transcript.txt
 
 ### 1.4 结合 PPT/PDF 和课堂字幕生成复习材料
 
-推荐使用 `study-note` 工作流。你只需要准备：
+使用 `study-note` 工作流只需要准备：
 
 1. 一个课程工作目录；
 2. `.env` 文件，里面保存 Canvas 登录 cookie；
@@ -197,7 +205,7 @@ OC_COOKIE="你的 oc.sjtu.edu.cn Cookie"
    https://oc.sjtu.edu.cn/courses/xxxxx
    ```
 
-> 最快的方法是查看 canvas icon 请求，例如 ![canvas_icon](https://static.sjtu.edu.cn/img/canvas_icon.png)`。
+> 最快的方法是查看 canvas icon 请求，例如 ![canvas_icon](./images/canvas-icon.png)`。
 
 8. 在右侧详情中进入：
 
@@ -382,7 +390,7 @@ uv run main study-note <course_id> \
 
 ---
 
-## 6. Agent Demo Prompts
+## 6. Agent Usage
 
 使用这个 skill 的核心价值在于让 agent 来自动完成从检查 Cookie、下载课程文件、获取字幕、生成复习资料等一系列操作。
 
@@ -426,7 +434,7 @@ uv run main study-note 90690 \
   --workspace ~/courses/算法设计与分析
 ```
 
-### Demo 6：只获取字幕文本
+### Demo 5：只获取字幕文本
 
 > 请帮我获取算法设计与分析第28讲的视频字幕，并保存到本地。课程 ID 是 `90690`，视频 ID 是 `v0v0AvJXOZuuUQF3H96l4w==`，输出目录是 `~/courses/算法设计与分析/reviews`。
 
@@ -478,7 +486,7 @@ Canvas API token 可以访问课程、文件、作业等标准 Canvas API；但�
 
 ---
 
-## 7. 隐私与合规提醒
+## 7. 免责声明 & 隐私与合规提醒
 
 请遵守上海交通大学的相关政策和规定，合理使用 Canvas 平台提供的 API 和数据。由于未按规使用该 skill 导致的任何后果由用户自行承担。本仓库的开发初衷是在 Agent 时代帮助同学们更高效地利用 Canvas 课程资源进行学习和复习，而不是为了大规模下载或传播课程内容等不当用途。
 
