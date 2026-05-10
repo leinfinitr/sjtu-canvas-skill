@@ -349,6 +349,13 @@ uv run main --json list-courses
 
 ## 5. 常用命令
 
+### 5.0 获取帮助
+
+```bash
+uv run main --help
+uv run sjtu-canvas --help
+```
+
 ### 5.1 列出课程
 
 ```bash

@@ -23,6 +23,23 @@ load_dotenv(dotenv_path=ENV_FILE)
 console = Console()
 
 
+class FullCommandHelpGroup(asyncclick.Group):
+    """Render complete command descriptions in top-level help output."""
+
+    def format_commands(self, ctx, formatter):
+        commands = []
+        for subcommand in self.list_commands(ctx):
+            cmd = self.get_command(ctx, subcommand)
+            if cmd is None or cmd.hidden:
+                continue
+            help_text = cmd.short_help or cmd.help or ""
+            commands.append((subcommand, help_text.strip()))
+
+        if commands:
+            with formatter.section("Commands"):
+                formatter.write_dl(commands)
+
+
 def _get_oc_cookie(workspace: str | Path | None = None) -> str:
     if workspace is not None:
         return get_workspace_cookie(workspace, fallback=os.environ.get("OC_COOKIE"))
@@ -123,7 +140,7 @@ async def _prompt_and_maybe_save_token(json_output: bool) -> str:
     return token
 
 
-@asyncclick.group()
+@asyncclick.group(cls=FullCommandHelpGroup)
 @asyncclick.option(
     "--token",
     envvar="TOKEN",
