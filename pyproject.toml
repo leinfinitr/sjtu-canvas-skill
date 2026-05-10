@@ -1,0 +1,29 @@
+[project]
+name = "scripts"
+version = "0.1.0"
+description = "A CLI tool to interact with SJTU Canvas, converted from the Rust implementation."
+dependencies = [
+    "asyncclick>=8.0",
+    "aiohttp[speedups]>=3.9.0",
+    "rich>=13.0",
+    "python-dotenv>=1.0",
+    "beautifulsoup4>=4.0",
+    "lxml>=5.0",
+    "requests>=2.31",
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+    "pymupdf>=1.24",
+    "python-pptx>=0.6.23",
+]
+requires-python = ">=3.12"
+
+[project.scripts]
+main = "scripts.main:main"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scripts"]
