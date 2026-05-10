@@ -24,6 +24,7 @@
 git clone https://github.com/leinfinitr/sjtu-canvas-skill.git
 cd sjtu-canvas-skill
 uv sync
+uv run main --help
 ```
 
 ### 1.1 获取 Canvas 课程信息
@@ -31,7 +32,7 @@ uv sync
 查询你当前 Canvas 中的课程，例如：
 
 ```bash
-uv run main --json list-courses
+uv run main list-courses
 ```
 
 > 第一次执行时会需要你提供 Canvas API Token，成功后会把 Token 保存在本地 `.env` 文件里，后续执行时会自动使用。Token 的获取方法见 [4. 如何获取 Canvas API Token？](#4-如何获取-canvas-api-token)。
@@ -39,7 +40,7 @@ uv run main --json list-courses
 也可以查询某门课的课程文件：
 
 ```bash
-uv run main --json list-files <course_id>
+uv run main list-files <course_id>
 ```
 
 ---
@@ -49,7 +50,7 @@ uv run main --json list-files <course_id>
 对于开启了“课堂视频”的课程，可以列出该课程的视频列表：
 
 ```bash
-uv run main --json list-videos <course_id>
+uv run main list-videos <course_id>
 ```
 
 > 课堂视频功能需要 `OC_COOKIE`，它是从浏览器登录 Canvas 后复制的 Cookie，主要用于访问视频平台的登录态。获取方法见 [3. 如何获取 Cookie？](#3-如何获取-cookie)。
@@ -334,13 +335,13 @@ OC_COOKIE="你的 oc.sjtu.edu.cn Cookie"
 在 skill 仓库中运行：
 
 ```bash
-uv run main --token "你的 Canvas API Token" --json list-courses
+uv run main --token "你的 Canvas API Token" list-courses
 ```
 
 如果你已经把 `TOKEN` 放入当前项目或环境变量，也可以直接：
 
 ```bash
-uv run main --json list-courses
+uv run main list-courses
 ```
 
 成功时会返回课程列表 JSON。
@@ -359,13 +360,13 @@ uv run sjtu-canvas --help
 ### 5.1 列出课程
 
 ```bash
-uv run main --json list-courses
+uv run main list-courses
 ```
 
 ### 5.2 列出某门课程的文件
 
 ```bash
-uv run main --json list-files <course_id>
+uv run main list-files <course_id>
 ```
 
 ### 5.3 下载某个课程文件
@@ -377,7 +378,7 @@ uv run main download-file "<file_url>" --path /path/to/course-workspace/material
 ### 5.4 列出课堂视频
 
 ```bash
-uv run main --json list-videos <course_id>
+uv run main list-videos <course_id>
 ```
 
 ### 5.5 下载某讲字幕

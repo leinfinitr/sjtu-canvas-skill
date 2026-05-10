@@ -504,7 +504,7 @@ async def list_folders(client: CanvasClient, course_id: int):
 @asyncclick.option("--path", default=".", help="The directory to save the file in.")
 @asyncclick.pass_obj
 async def download_file(client: CanvasClient, url: str, path: str):
-    """Downloads a file from a specific URL, e.g. one from 'list-files'."""
+    """Downloads a file from a specific URL."""
     try:
         if not client.json_output:
             console.print(f"[bold cyan]Downloading from {url}...[/bold cyan]")
