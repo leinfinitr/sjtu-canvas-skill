@@ -12,3 +12,4 @@ wheels/
 # Local secrets
 .env
 .env.*
+!.env.example

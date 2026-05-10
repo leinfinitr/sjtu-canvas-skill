@@ -4,6 +4,8 @@
 
 本 skill 提供了一些基本 cli 命令执行特定功能，例如列出课程、下载文件、获取字幕、生成复习上下文等。你可以使用这些命令来测试 Token 是否有效、获取的信息是否正确。但更好的使用方式是直接让 agent 来完成所有任务（这也是 skill 的设计初衷）。
 
+> **开发与致谢**：本仓库开发过程中使用了 Hermes Agent 与 GPT-5.5 辅助需求分析、实现和测试；同时参考、借鉴了 [Hydroiodic/sjtu-canvas-skill](https://github.com/Hydroiodic/sjtu-canvas-skill) 和 [Okabe-Rintarou-0/SJTU-Canvas-Helper](https://github.com/Okabe-Rintarou-0/SJTU-Canvas-Helper) 等开源项目的思路。感谢这些项目对 SJTU Canvas 自动化工具生态的探索。
+
 ---
 
 ## 0. 安装使用

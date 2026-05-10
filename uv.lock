@@ -1087,7 +1087,7 @@ wheels = [
 ]
 
 [[package]]
-name = "scripts"
+name = "sjtu-canvas-skill"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
@@ -1096,12 +1096,16 @@ dependencies = [
     { name = "beautifulsoup4" },
     { name = "lxml" },
     { name = "pymupdf" },
-    { name = "pytest" },
-    { name = "pytest-asyncio" },
     { name = "python-dotenv" },
     { name = "python-pptx" },
     { name = "requests" },
     { name = "rich" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
 ]
 
 [package.metadata]
@@ -1111,13 +1115,14 @@ requires-dist = [
     { name = "beautifulsoup4", specifier = ">=4.0" },
     { name = "lxml", specifier = ">=5.0" },
     { name = "pymupdf", specifier = ">=1.24" },
-    { name = "pytest", specifier = ">=8.0" },
-    { name = "pytest-asyncio", specifier = ">=0.23" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.0" },
+    { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = ">=0.23" },
     { name = "python-dotenv", specifier = ">=1.0" },
     { name = "python-pptx", specifier = ">=0.6.23" },
     { name = "requests", specifier = ">=2.31" },
     { name = "rich", specifier = ">=13.0" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "soupsieve"
