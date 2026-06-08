@@ -7,7 +7,7 @@ description: Interacts with the SJTU Canvas API to manage courses, assignments, 
 
 This skill provides a command-line interface (CLI) to interact with the Shanghai Jiao Tong University (SJTU) Canvas Learning Management System. It allows you to access course information, manage assignments, and handle files.
 
-## 1. Configuration
+## Configuration
 
 Configuration is handled via CLI options or environment variables. You can also create a `.env` file in the project root to store your credentials.
 
@@ -32,9 +32,50 @@ Configuration is handled via CLI options or environment variables. You can also 
 6.  Click **Generate Token**.
 7.  **Important**: Copy the generated token immediately. You will not be able to see it again.
 
-## 2. Commands
+### Local installation inside Hermes skill directory
 
-All commands are available via the `main` entry point. You can run them using `uv run main [command]`.
+If installed from a direct raw `SKILL.md` URL, Hermes may install only `SKILL.md` and omit the repo's CLI implementation files. For this skill, clone the repo and copy at least `references/`, `scripts/`, `pyproject.toml`, `uv.lock`, and `README.md` into the installed skill directory, then verify from that directory:
+
+```bash
+git clone https://github.com/leinfinitr/sjtu-canvas-skill.git /tmp/sjtu-canvas-skill
+SKILL_DIR="$LOCALAPPDATA/hermes/skills/sjtu-canvas-skill"  # Windows git-bash example
+cp -R /tmp/sjtu-canvas-skill/references "$SKILL_DIR/"
+cp -R /tmp/sjtu-canvas-skill/scripts "$SKILL_DIR/"
+cp /tmp/sjtu-canvas-skill/pyproject.toml /tmp/sjtu-canvas-skill/uv.lock /tmp/sjtu-canvas-skill/README.md "$SKILL_DIR/"
+cd "$SKILL_DIR"
+uv run main --help
+```
+
+On Windows Hermes terminal uses git-bash/MSYS; `$LOCALAPPDATA/hermes/skills/sjtu-canvas-skill` works, and `/tmp/...` may resolve under the Windows temp directory.
+
+Credential behavior: if `TOKEN` is not set, `uv run main --json list-courses` prompts interactively for the Canvas token and can hang in non-interactive tool calls. Before running Canvas queries, check for `TOKEN`/`BASE_URL`/`OC_COOKIE` with `printenv` or pass `--token` explicitly. Use `TOKEN` for Canvas API course/files/assignments; use `OC_COOKIE` additionally for classroom video/subtitle workflows.
+
+See `references/local-install-and-dns.md` for local install details, non-interactive credential checks, the Windows aiohttp/aiodns DNS workaround, and how to interpret `list-videos` failures when course-file workflows still work.
+
+See `references/review-workflow.md` for the lecture-review workflow: resolve course/video/material IDs, download Canvas files, download subtitles, extract PDF text, combine sources into a review note, and handle stale-cookie or missing-video pitfalls.
+
+See `references/batch-guide-review-workflow.md` when the user provides a `guide.md` mapping many PDFs to lecture numbers and asks for all course review materials. It covers cache reuse, subagent batching, gap-filling after timeouts, transcript-missing handling, and `INDEX.md` generation.
+
+See `references/incremental-review-updates.md` when a review note already exists and a renewed cookie or later Canvas update makes a previously missing lecture/video/subtitle available; patch the existing note and remove stale caveats rather than creating a competing note.
+
+See `references/local-rewrite-and-index-refresh.md` when the workspace already has local PDFs, extracted text, transcripts, and older review notes, and the task is to do a final high-quality rewrite / gap-fill pass plus rebuild `reviews/INDEX.md` from actual filesystem state.
+
+See `references/windows-local-review-pitfalls.md` for Windows Git Bash/local-workspace pitfalls: verifying the actual tool backend after `/reload`, avoiding native-Python `/tmp` mismatches, normalizing nested downloaded subtitle paths, and the proven late-course update pattern.
+
+### Review-note quality and batching expectations
+
+For this user's SJTU Canvas review workflow, default to:
+
+- High-detail Chinese review notes, not brief template summaries.
+- A structure that explains definitions, intuition, proof logic, algorithmic motivation, complexity analysis, pitfalls, and self-test questions.
+- Integrating PDF slides with transcript evidence, but rewriting into clean study material rather than dumping raw extraction.
+- Small verified batches (for example 1-2 hands / lectures at a time) instead of one-shot mass generation across the whole course.
+
+When rewriting or upgrading existing review notes:
+
+- Treat concise or skeletal notes as insufficient unless the user explicitly asks for brevity.
+- Prefer the quality level of a polished exam-review handout: coherent narrative, explicit theorem dependencies, and concrete "why" explanations.
+- After each small batch, verify the generated files before claiming completion.
 
 ---
 
