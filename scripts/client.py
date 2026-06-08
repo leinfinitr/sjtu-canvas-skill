@@ -1,10 +1,47 @@
 import os
+import sys
+import socket
+import asyncio
 import aiohttp
 import urllib.parse
 from rich.progress import Progress
 from urllib.parse import urlparse, parse_qs
 from typing import Any, Dict, List, Optional
 from yarl import URL
+
+
+class _SystemResolver(aiohttp.abc.AbstractResolver):
+    """Resolver that uses the OS resolver instead of aiodns.
+
+    On this Windows/MSYS setup, aiohttp's aiodns resolver can time out against
+    the IPv6 DNS server while socket.getaddrinfo and curl work. This keeps the
+    CLI aligned with the system resolver.
+    """
+
+    async def resolve(self, host, port=0, family=socket.AF_INET):
+        infos = await asyncio.to_thread(
+            socket.getaddrinfo, host, port, family, socket.SOCK_STREAM
+        )
+        return [
+            {
+                "hostname": host,
+                "host": address[0],
+                "port": address[1],
+                "family": addr_family,
+                "proto": proto,
+                "flags": 0,
+            }
+            for addr_family, _socktype, proto, _canonname, address in infos
+        ]
+
+    async def close(self):
+        return None
+
+
+def _connector_kwargs() -> Dict[str, Any]:
+    if sys.platform.startswith("win"):
+        return {"resolver": _SystemResolver(), "family": socket.AF_INET}
+    return {}
 
 
 class CanvasClient:
@@ -23,7 +60,9 @@ class CanvasClient:
         """Lazily create the HTTP session inside a running async context."""
         if self.client is None or self.client.closed:
             self.client = aiohttp.ClientSession(
-                headers=self.headers, timeout=aiohttp.ClientTimeout(total=30.0)
+                headers=self.headers,
+                timeout=aiohttp.ClientTimeout(total=30.0),
+                connector=aiohttp.TCPConnector(**_connector_kwargs()),
             )
         return self.client
 
@@ -238,7 +277,8 @@ class CanvasClient:
         # Encode to avoid issues with special characters in URLs
         download_url = URL(final_url, encoded=True)
         download_client = aiohttp.ClientSession(
-            timeout=aiohttp.ClientTimeout(total=30.0)
+            timeout=aiohttp.ClientTimeout(total=30.0),
+            connector=aiohttp.TCPConnector(**_connector_kwargs()),
         )
 
         try:
