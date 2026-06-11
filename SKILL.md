@@ -58,6 +58,8 @@ See `references/batch-guide-review-workflow.md` when the user provides a `guide.
 
 See `references/incremental-review-updates.md` when a review note already exists and a renewed cookie or later Canvas update makes a previously missing lecture/video/subtitle available; patch the existing note and remove stale caveats rather than creating a competing note.
 
+See `references/early-lecture-subtitle-review.md` when local lecture PDFs/PPTX are already present and `guide.md` maps `lecN` files to classroom-video lecture numbers; it covers combining teacher subtitles with slide structure, marking missing/noisy subtitles, and skipping later student/team-report sections.
+
 See `references/local-rewrite-and-index-refresh.md` when the workspace already has local PDFs, extracted text, transcripts, and older review notes, and the task is to do a final high-quality rewrite / gap-fill pass plus rebuild `reviews/INDEX.md` from actual filesystem state.
 
 See `references/windows-local-review-pitfalls.md` for Windows Git Bash/local-workspace pitfalls: verifying the actual tool backend after `/reload`, avoiding native-Python `/tmp` mismatches, normalizing nested downloaded subtitle paths, and the proven late-course update pattern.

@@ -13,3 +13,8 @@ wheels/
 .env
 .env.*
 !.env.example
+
+# Output
+transcripts/
+videos_*
+download_*
