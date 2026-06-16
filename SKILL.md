@@ -9,7 +9,7 @@ This skill provides a command-line interface (CLI) to interact with the Shanghai
 
 ## Configuration
 
-Configuration is handled via CLI options or environment variables. You can also create a `.env` file in the project root to store your credentials.
+Configuration is handled via CLI options or environment variables. By default use `.env` file in this skill directory to store your credentials.
 
 ### Environment Variables
 
@@ -48,7 +48,7 @@ uv run main --help
 
 On Windows Hermes terminal uses git-bash/MSYS; `$LOCALAPPDATA/hermes/skills/sjtu-canvas-skill` works, and `/tmp/...` may resolve under the Windows temp directory.
 
-Credential behavior: if `TOKEN` is not set, `uv run main --json list-courses` prompts interactively for the Canvas token and can hang in non-interactive tool calls. Before running Canvas queries, check for `TOKEN`/`BASE_URL`/`OC_COOKIE` with `printenv` or pass `--token` explicitly. Use `TOKEN` for Canvas API course/files/assignments; use `OC_COOKIE` additionally for classroom video/subtitle workflows.
+Credential behavior: if `TOKEN` is not set, `uv run main --json list-courses` prompts interactively for the Canvas token and can hang in non-interactive tool calls. Before running Canvas queries, check for `TOKEN`/`BASE_URL`/`OC_COOKIE` in `hermes/skills/sjtu-canvas-skill/.env` or pass `--token` explicitly. Use `TOKEN` for Canvas API course/files/assignments; use `OC_COOKIE` additionally for classroom video/subtitle workflows.
 
 See `references/local-install-and-dns.md` for local install details, non-interactive credential checks, the Windows aiohttp/aiodns DNS workaround, and how to interpret `list-videos` failures when course-file workflows still work.
 
@@ -61,6 +61,8 @@ See `references/incremental-review-updates.md` when a review note already exists
 See `references/early-lecture-subtitle-review.md` when local lecture PDFs/PPTX are already present and `guide.md` maps `lecN` files to classroom-video lecture numbers; it covers combining teacher subtitles with slide structure, marking missing/noisy subtitles, and skipping later student/team-report sections.
 
 See `references/local-rewrite-and-index-refresh.md` when the workspace already has local PDFs, extracted text, transcripts, and older review notes, and the task is to do a final high-quality rewrite / gap-fill pass plus rebuild `reviews/INDEX.md` from actual filesystem state.
+
+See `references/per-lecture-review-workflow.md` when the user asks for review materials for several local `lecN` course days and expects one file per day/lecture mapping. It covers using `guide.md`, loading `.env` from the skill directory, Windows path pitfalls, skipping student presentation segments, generating per-lecture notes, and refreshing `reviews/INDEX.md`.
 
 See `references/windows-local-review-pitfalls.md` for Windows Git Bash/local-workspace pitfalls: verifying the actual tool backend after `/reload`, avoiding native-Python `/tmp` mismatches, normalizing nested downloaded subtitle paths, and the proven late-course update pattern.
 

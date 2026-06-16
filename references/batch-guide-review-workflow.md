@@ -15,13 +15,13 @@ uv run main --json list-videos <course_id> > "<workspace>/cache/videos_<course_i
 ```
 
 4. For each material group:
-   - Prefer `handN.pdf` over `algoN.pdf` when the guide says `handN`.
-   - Download PDFs into `<workspace>/materials/` with `download-file` using the fresh `url` from `list-files`.
+   - Download PDFs into `<workspace>/materials/` with `download-file` using the fresh `url` from `list-files` if necessary.
    - Extract PDF text to `<workspace>/materials/handN.txt` with PyMuPDF, then verify the extracted text is non-trivial before writing the review note. If the text is suspiciously short, rerun extraction instead of summarizing from a broken export.
    - Match videos by `第N讲` in `video_name` and download subtitles into `<workspace>/transcripts/`.
    - Generate `<workspace>/reviews/handN_review_note.md`.
-5. When quality matters, do not one-shot all hands into shallow summaries. First produce one detailed exemplar note (or use an existing good one such as `hand16_review_note.md`) as the quality benchmark, then continue in small verified batches.
+5. When quality matters, do not one-shot all hands into shallow summaries. If there are many materials(e.g. more than 3), you should use subagents to batch them into smaller groups(e.g. 1-2, 3-4) with parent-session verification.
 6. Create `<workspace>/reviews/INDEX.md` listing every generated note, material path, transcript status, and any missing subtitles.
+7. Usually, one class uses one file, including two or three videos. For each class, provide a single detailed review note that covers all the content.
 
 ## Review note shape
 
@@ -39,9 +39,7 @@ For each `handN_review_note.md`, aim for the detailed `hand16_review_note.md` st
 
 ## Parallelization with subagents
 
-Only use broad subagent batching when the user explicitly wants speed over polish. If the user cares about note quality or has already complained about shallow summaries, prefer parent-session writing or very small batches (for example one hand first, then `hand2-hand4`, then the next batch) with manual verification between batches.
-
-If you do use subagents, batch them by disjoint material ranges, e.g. `hand1-hand5`, `hand6-hand11`, `hand12-hand16`. Give each subagent full context including:
+Use broad subagent batching when the number of materials is large and quality matters, e.g. more than 3 materials. Batch by disjoint material ranges, e.g. `hand1-hand3`, `hand4-hand6`, `hand7-hand9`. Give each subagent full context including:
 
 - Skill directory and required working directory.
 - `course_id`.
@@ -50,6 +48,8 @@ If you do use subagents, batch them by disjoint material ranges, e.g. `hand1-han
 - Cache file locations.
 - Output contract.
 - No secret leakage.
+
+Subagents should produce their assigned review notes one by one, then exit with a summary of what they completed. They need to obey the rule that one class's content goes into one review note. For example, if `hand16` corresponds to lectures 29 and 30, both should be covered in `hand16_review_note.md` with a single theme and detailed explanation.
 
 Subagents may time out after doing partial work. Always perform a parent-session verification pass:
 

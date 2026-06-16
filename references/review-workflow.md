@@ -49,9 +49,12 @@ For lecture review, produce:
 - Self-test questions with answers.
 - Suggested review order.
 
+Usually, one class uses one file, including two or three videos. For each class, provide a single review note that covers all the content. If a video is missing, state the caveat and review the available content instead of inventing a transcript.
+
 ## Pitfalls
 
 - `list-videos` can fail with `未找到新版课堂视频入口...` when `OC_COOKIE` is stale even if `TOKEN` and `list-files` still work. Verify video auth separately by checking whether a request to `https://oc.sjtu.edu.cn/courses/<course_id>` redirects to `/login/canvas` or contains the `课堂视频` link.
+- `list-videos` may also exit successfully but print no rows even when `download-subtitle <course_id> --video-id <known_id>` works. In that case, debug from the skill directory so `.env` is loaded: use `SJTUVideoClient.launch_video_platform(course_id)` and call `_post_video_list(video_session.canvas_course_id, video_session.token)` directly to inspect the raw payload. The payload may contain `data.records` with `videoId`, `videoName`, and `courseBeginTime`; use those IDs to batch `download-subtitle` or a small Python script that calls `get_video_info()` and `get_subtitle()`.
 - The skill loads `.env` via python-dotenv; shell `source .env` may fail when cookie values contain quotes, semicolons, or spaces. Do not rely on shell-sourcing cookie files. Let the CLI/python-dotenv load `.env`, or pass `OC_COOKIE` through the process environment safely.
 - If the requested lecture is not present in `list-videos`, state the caveat and use available sources instead of inventing a transcript.
 - Avoid destructive cleanup such as `rm -rf` in verification steps; create a new output directory instead.
